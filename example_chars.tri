@@ -1,0 +1,19 @@
+!this is an example program
+let
+	const _MAX--VAR_ == 10;
+	var n: Integer
+in
+	{
+		put("e"); put("n"); put("t"); put("e"); put("r"); put(" ");
+		put("n"); put("u"); put("m"); put("b"); put("e"); put("r"); put(":");
+		getint(var n);
+		if n > 0 & n < 3 then
+			if n < _MAX--VAR_ then
+				while n > 0 do
+					{
+						putint(n); puteol();
+						n == n-1
+					}
+			else
+		else
+	}
