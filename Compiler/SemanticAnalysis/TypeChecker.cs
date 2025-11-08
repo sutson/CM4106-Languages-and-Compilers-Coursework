@@ -283,8 +283,6 @@ namespace Compiler.SemanticAnalysis
             PerformTypeChecking(binaryExpression.RightExpression);
             if (!(binaryExpression.Op.Declaration is BinaryOperationDeclarationNode opDeclaration))
             {
-                Console.WriteLine(binaryExpression.Op.Declaration);
-
                 Reporter.ReportError($"{binaryExpression.Op.OperatorToken.Spelling} is being used as a binary operator but is not one " +
                     $"at line {binaryExpression.Position.LineNumber}, column {binaryExpression.Position.PositionInLine}");
             }
@@ -350,7 +348,6 @@ namespace Compiler.SemanticAnalysis
         /// <param name="integerExpression">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIntegerExpression(IntegerExpressionNode integerExpression)
         {
-            Console.WriteLine(integerExpression.Type);
             PerformTypeChecking(integerExpression.IntLit);
             integerExpression.Type = StandardEnvironment.IntegerType;
         }

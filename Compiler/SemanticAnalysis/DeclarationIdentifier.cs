@@ -1,7 +1,6 @@
 ﻿using Compiler.IO;
 using Compiler.Nodes;
 using Compiler.Tokenization;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using static System.Reflection.BindingFlags;

@@ -1,10 +1,7 @@
 ﻿using Compiler.IO;
 using Compiler.Nodes;
 using Compiler.Tokenization;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq.Expressions;
 using static Compiler.Tokenization.TokenType;
 
 namespace Compiler.SyntacticAnalysis
@@ -320,34 +317,6 @@ namespace Compiler.SyntacticAnalysis
                 return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
             }
         }
-
-        /// <summary>
-        /// Parses a constant declaration
-        /// </summary>
-        /// <returns>An abstract syntax tree representing the constant declaration</returns>
-        //private IDeclarationNode ParseConstDeclaration()
-        //{
-        //    Debugger.Write("Parsing Constant Declaration");
-        //    Position StartPosition = CurrentToken.Position;
-        //    TypeDenoterNode typeDenoter = ParseTypeDenoter();
-        //    IdentifierNode identifier = ParseIdentifier();
-        //    Accept(Is);
-        //    IExpressionNode expression = ParseExpression();
-        //    return new ConstDeclarationNode(identifier, expression, StartPosition);
-        //}
-
-        ///// <summary>
-        ///// Parses a variable declaration
-        ///// </summary>
-        ///// <returns>An abstract syntax tree representing the variable declaration</returns>
-        //private IDeclarationNode ParseVarDeclaration()
-        //{
-        //    Debugger.Write("Parsing Variable Declaration");
-        //    Position StartPosition = CurrentToken.Position;
-        //    TypeDenoterNode typeDenoter = ParseTypeDenoter();
-        //    IdentifierNode identifier = ParseIdentifier();
-        //    return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
-        //}
 
         /// <summary>
         /// Parses a type denoter
