@@ -1,7 +1,10 @@
 ﻿using Compiler.IO;
 using Compiler.Nodes;
 using Compiler.Tokenization;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq.Expressions;
 using static Compiler.Tokenization.TokenType;
 
 namespace Compiler.SyntacticAnalysis
@@ -130,10 +133,10 @@ namespace Compiler.SyntacticAnalysis
                 case While:
                     return ParseWhileCommand();
                 // TODO: handle Repeat and Unless
-                //case Repeat:
-                //    return ParseWhileCommand();
-                //case Unless:
-                //    return ParseWhileCommand();
+                case Repeat:
+                    return ParseRepeatCommand();
+                case Unless:
+                    return ParseUnlessCommand();
                 default:
                     return ParseSkipCommand();
             }
@@ -155,6 +158,13 @@ namespace Compiler.SyntacticAnalysis
                 IParameterNode parameter = ParseParameter();
                 Accept(RightBracket);
                 return new CallCommandNode(identifier, parameter);
+            }
+            else if (CurrentToken.Type == Identifier)
+            {
+                Debugger.Write("Parsing something");
+                Accept(Is);
+                IExpressionNode expression = ParseExpression();
+                return new AssignCommandNode(identifier, expression);
             }
             else if (CurrentToken.Type == Is)
             {
@@ -195,35 +205,35 @@ namespace Compiler.SyntacticAnalysis
             return new WhileCommandNode(expression, command, startPosition);
         }
 
-        ///// <summary>
-        ///// TODO: add desc for ParseRepeatCommand
-        ///// </summary>
-        ///// <returns>TODO: add return desc for ParseRepeatCommand</returns>
-        //private ICommandNode ParseRepeatCommand()
-        //{
-        //    Debugger.Write("Parsing Repeat Command");
-        //    Position startPosition = CurrentToken.Position;
-        //    //Accept(Repeat); TODO: handle accept Repeat
-        //    ICommandNode command = ParseSingleCommand();
-        //    //Accept(Until); TODO: handle accept Until
-        //    IExpressionNode expression = ParseExpression();
-        //    return new ReturnRepeatNode(expression, command, startPosition); // TODO: handle return Repeat node
-        //}
+        /// <summary>
+        /// TODO: add desc for ParseRepeatCommand
+        /// </summary>
+        /// <returns>TODO: add return desc for ParseRepeatCommand</returns>
+        private ICommandNode ParseRepeatCommand()
+        {
+            Debugger.Write("Parsing Repeat Command");
+            Position startPosition = CurrentToken.Position;
+            Accept(Repeat);
+            ICommandNode command = ParseSingleCommand();
+            Accept(Until);
+            IExpressionNode expression = ParseExpression();
+            return new RepeatCommandNode(command, expression, startPosition);
+        }
 
-        ///// <summary>
-        ///// TODO: add desc for ParseUntilCommand
-        ///// </summary>
-        ///// <returns>TODO: add return desc for ParseUntilCommand</returns>
-        //private ICommandNode ParseUntilCommand()
-        //{
-        //    Debugger.Write("Parsing Until Command");
-        //    Position startPosition = CurrentToken.Position;
-        //    //Accept(Unless); TODO: handle accept Unless
-        //    IExpressionNode expression = ParseExpression();
-        //    //Accept(Until); TODO: handle accept Until
-        //    ICommandNode command = ParseSingleCommand();
-        //    return new ReturnUntilNode(expression, command, startPosition); // TODO: handle return Until node
-        //}
+        /// <summary>
+        /// TODO: add desc for ParseUnlessCommand
+        /// </summary>
+        /// <returns>TODO: add return desc for ParseUnlessCommand</returns>
+        private ICommandNode ParseUnlessCommand()
+        {
+            Debugger.Write("Parsing Unless Command");
+            Position startPosition = CurrentToken.Position;
+            Accept(Unless);
+            IExpressionNode expression = ParseExpression();
+            Accept(Do);
+            ICommandNode command = ParseSingleCommand();
+            return new UnlessCommandNode(expression, command, startPosition);
+        }
 
         /// <summary>
         /// Parses an if command
@@ -251,7 +261,7 @@ namespace Compiler.SyntacticAnalysis
             Debugger.Write("Parsing Let Command");
             Position startPosition = CurrentToken.Position;
             Accept(Let);
-            //Accept(Local); TODO: handle "Let local"?
+            Accept(Local);
             IDeclarationNode declaration = ParseDeclaration();
             Accept(In);
             ICommandNode command = ParseSingleCommand();
@@ -301,19 +311,29 @@ namespace Compiler.SyntacticAnalysis
         {
             Debugger.Write("Parsing Single Declaration");
             TypeDenoterNode typeDenoter = ParseTypeDenoter();
-            IdentifierNode identifier = ParseIdentifier();
-            Accept(Is);
-            IExpressionNode expression = ParseExpression();
-            //return new IDeclarationNode TODO: create Node for this
-            //switch (CurrentToken.Type)
-            //{
-            //    case Const:
-            //        return ParseConstDeclaration();
-            //    case Var:
-            //        return ParseVarDeclaration();
-            //    default:
-            //        return new ErrorNode(CurrentToken.Position);
-            //}
+            Console.WriteLine("hi");
+            Console.WriteLine(CurrentToken.Type);
+            if (CurrentToken.Type == Is)
+            {
+                Accept(Is);
+                return ParseConstDeclaration();
+            }
+            else
+            { 
+                return ParseVarDeclaration();
+            }
+            // TODO: error for invalid type denoter? maybe this is handled in TypeChecker.cs
+            
+            //switch (typeDenoter.Identifier.IdentifierToken.Type) // TODO: check this works
+            //    {
+            //        case Const:
+            //            return ParseConstDeclaration();
+            //        case Var:
+            //            return ParseVarDeclaration();
+            //        default:
+            //            return new ErrorNode(CurrentToken.Position);
+            //    }
+            // TODO: distinguish between const and var (const has == but otherwise the same)
         }
 
         /// <summary>
@@ -324,7 +344,7 @@ namespace Compiler.SyntacticAnalysis
         {
             Debugger.Write("Parsing Constant Declaration");
             Position StartPosition = CurrentToken.Position;
-            Accept(Const);
+            TypeDenoterNode typeDenoter = ParseTypeDenoter();
             IdentifierNode identifier = ParseIdentifier();
             Accept(Is);
             IExpressionNode expression = ParseExpression();
@@ -340,13 +360,10 @@ namespace Compiler.SyntacticAnalysis
             Debugger.Write("Parsing Variable Declaration");
             Position StartPosition = CurrentToken.Position;
             Accept(Var);
-            IdentifierNode identifier = ParseIdentifier();
-            Accept(Colon);
             TypeDenoterNode typeDenoter = ParseTypeDenoter();
+            IdentifierNode identifier = ParseIdentifier();
             return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
         }
-
-
 
         /// <summary>
         /// Parses a type denoter
@@ -432,8 +449,29 @@ namespace Compiler.SyntacticAnalysis
         {
             Debugger.Write("Parsing Identifier Expression");
             IdentifierNode identifier = ParseIdentifier();
+            if (CurrentToken.Type == TokenType.LeftBracket)
+            {
+                Accept(LeftBracket);
+                IParameterNode parameter = ParseParameter();
+                Accept(RightBracket);
+                return new CallExpressionNode(identifier, parameter);
+            }
             return new IdExpressionNode(identifier);
         }
+
+        ///// <summary>
+        ///// TODO: add desc for ParseCallExpression
+        ///// </summary>
+        ///// <returns>add return desc for ParseCallExpression</returns>
+        //private IExpressionNode ParseCallExpression()
+        //{
+        //    Debugger.Write("Parsing Call Expression");
+        //    IdentifierNode identifier = ParseIdentifier();
+        //    Accept(LeftBracket);
+        //    IParameterNode parameter = ParseParameter();
+        //    Accept(RightBracket);
+        //    return new CallExpressionNode(identifier, parameter);
+        //}
 
         /// <summary>
         /// Parses a unary expresion
@@ -476,7 +514,7 @@ namespace Compiler.SyntacticAnalysis
                 case CharLiteral:
                 case Operator:
                 case LeftBracket:
-                    return ParseExpressionParameter();
+                    return ParseValueParameter();
                 case Var:
                     return ParseVarParameter();
                 case RightBracket:
@@ -490,7 +528,7 @@ namespace Compiler.SyntacticAnalysis
         /// Parses an expression parameter
         /// </summary>
         /// <returns>An abstract syntax tree representing the expression parameter</returns>
-        private IParameterNode ParseExpressionParameter()
+        private IParameterNode ParseValueParameter()
         {
             Debugger.Write("Parsing Value Parameter");
             IExpressionNode expression = ParseExpression();

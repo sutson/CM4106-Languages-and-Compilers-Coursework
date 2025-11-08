@@ -1,6 +1,7 @@
 ﻿using Compiler.IO;
 using Compiler.Nodes;
 using Compiler.Tokenization;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using static System.Reflection.BindingFlags;
@@ -78,8 +79,6 @@ namespace Compiler.SemanticAnalysis
             PerformIdentification(programNode.Command);
         }
 
-
-
         /// <summary>
         /// Carries out identification on an assign command node
         /// </summary>
@@ -151,7 +150,25 @@ namespace Compiler.SemanticAnalysis
             PerformIdentification(whileCommand.Command);
         }
 
+        /// <summary>
+        /// Carries out identification on a while command node TODO: change
+        /// </summary>
+        /// <param name="repeatCommand">The node to perform identification on TODO: change</param>
+        private void PerformIdentificationOnRepeatCommand(RepeatCommandNode repeatCommand)
+        {
+            PerformIdentification(repeatCommand.Command);
+            PerformIdentification(repeatCommand.Expression);
+        }
 
+        /// <summary>
+        /// Carries out identification on a while command node TODO: change
+        /// </summary>
+        /// <param name="unlessCommand">The node to perform identification on TODO: change</param>
+        private void PerformIdentificationOnUnlessCommand(UnlessCommandNode unlessCommand)
+        {
+            PerformIdentification(unlessCommand.Expression);
+            PerformIdentification(unlessCommand.Command);
+        }
 
         /// <summary>
         /// Carries out identification on a const declaration node
@@ -184,8 +201,6 @@ namespace Compiler.SemanticAnalysis
             Token token = varDeclaration.Identifier.IdentifierToken;
             bool success = SymbolTable.Enter(token.Spelling, varDeclaration);
         }
-
-
 
         /// <summary>
         /// Carries out identification on a binary expression node

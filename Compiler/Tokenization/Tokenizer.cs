@@ -131,17 +131,12 @@ namespace Compiler.Tokenization
             {
                 // Read an operator
                 TakeIt();
-                return TokenType.Operator;
-            }
-            else if (Reader.Current == '=')
-            {
-                TakeIt();
                 if (Reader.Current == '=')
                 {
                     TakeIt();
                     return TokenType.Is;
                 }
-                return TokenType.Error;
+                return TokenType.Operator;
             }
             else if (Reader.Current == ';')
             {

@@ -15,10 +15,10 @@ namespace Compiler.Tokenization
         IntLiteral, Identifier, Operator, CharLiteral, 
 
         // reserved words - terminals
-        Begin, Const, Do, Else, End, If, In, Let, Then, Var, While,
+        Begin, Const, Do, Else, End, If, In, Let, Local, Then, Var, While, Repeat, Until, Unless,
 
         // punctuation - terminals (Is is for assignment and constants)
-        Colon, Semicolon, Is, LeftBracket, RightBracket,
+        Semicolon, Is, LeftBracket, RightBracket,
 
         // special tokens
         EndOfText, Error
@@ -41,10 +41,15 @@ namespace Compiler.Tokenization
             { "}", End },
             { "if", If },
             { "in", In },
-            { "let local", Let },
+            { "let", Let },
+            { "local", Local },
             { "then", Then },
             { "var", Var },
             { "while", While },
+            { "repeat", Repeat },
+            { "until", Until },
+            { "unless", Unless },
+
         }.ToImmutableDictionary();
 
         /// <summary>

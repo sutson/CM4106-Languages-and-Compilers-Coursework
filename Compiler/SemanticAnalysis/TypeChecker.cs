@@ -210,7 +210,35 @@ namespace Compiler.SemanticAnalysis
             }
         }
 
+        /// <summary>
+        /// Carries out type checking on a while command node TODO: change
+        /// </summary>
+        /// <param name="repeatCommand">The node to perform type checking on TODO: change</param>
+        private void PerformTypeCheckingOnRepeatCommand(RepeatCommandNode repeatCommand)
+        {
+            PerformTypeChecking(repeatCommand.Command);
+            PerformTypeChecking(repeatCommand.Expression);
+            if (repeatCommand.Expression.Type != StandardEnvironment.BooleanType)
+            {
+                Reporter.ReportError($"Condition in repeat command is not a boolean " +
+                    $"at line {repeatCommand.Position.LineNumber}, column {repeatCommand.Position.PositionInLine}");
+            }
+        }
 
+        /// <summary>
+        /// Carries out type checking on a while command node TODO: change
+        /// </summary>
+        /// <param name="unlessCommand">The node to perform type checking on TODO: change</param>
+        private void PerformTypeCheckingOnUnlessCommand(UnlessCommandNode unlessCommand)
+        {
+            PerformTypeChecking(unlessCommand.Expression);
+            PerformTypeChecking(unlessCommand.Command);
+            if (unlessCommand.Expression.Type != StandardEnvironment.BooleanType)
+            {
+                Reporter.ReportError($"Condition in unless command is not a boolean " +
+                    $"at line {unlessCommand.Position.LineNumber}, column {unlessCommand.Position.PositionInLine}");
+            }
+        }
 
         /// <summary>
         /// Carries out type checking on a const declaration node

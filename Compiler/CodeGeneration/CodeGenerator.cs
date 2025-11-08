@@ -189,7 +189,34 @@ namespace Compiler.CodeGeneration
             return;
         }
 
+        /// <summary>
+        /// Generates code for a repeat command node
+        /// </summary>
+        /// <param name="repeatCommand">The node to generate code for</param>
+        private void GenerateCodeForRepeatCommand(RepeatCommandNode repeatCommand)
+        {
+            Debugger.Write("Generating code for Repeat Command");
+            Address loopAddress = code.NextAddress;
+            GenerateCodeFor(repeatCommand.Command);
+            GenerateCodeFor(repeatCommand.Expression);
+            code.AddInstruction(OpCode.JUMPIF, Register.CB, TrueValue, loopAddress);
+            return;
+        }
 
+        /// <summary>
+        /// Generates code for a unless command node
+        /// </summary>
+        /// <param name="repeatCommand">The node to generate code for</param>
+        private void GenerateCodeForUnlessCommand(UnlessCommandNode unlessCommand)
+        {
+            Debugger.Write("Generating code for Unless Command");
+            GenerateCodeFor(unlessCommand.Expression);
+            Address skipAddress = code.NextAddress;
+            code.AddInstruction(OpCode.JUMPIF, Register.CB, TrueValue, 0);
+            GenerateCodeFor(unlessCommand.Command);
+            code.PatchInstructionToJumpHere(skipAddress);
+            return;
+        }
 
         /// <summary>
         /// Generates code for a const declaration node
