@@ -3,14 +3,12 @@
     /// <summary>
     /// A node corresponding to an ID expression
     /// </summary>
-    public class CallExpressionNode : IExpressionNode
+    public class IdExpressionNode : IExpressionNode
     {
         /// <summary>
         /// The identifier
         /// </summary>
         public IdentifierNode Identifier { get; }
-
-        public IParameterNode Parameter { get; }
 
         /// <summary>
         /// The type of the node
@@ -26,10 +24,9 @@
         /// Creates a new ID expression node
         /// </summary>
         /// <param name="identifier">The identifier</param>
-        public CallExpressionNode(IdentifierNode identifier, IParameterNode parameter)
+        public IdExpressionNode(IdentifierNode identifier)
         {
             Identifier = identifier;
-            Parameter = parameter;
         }
     }
 }

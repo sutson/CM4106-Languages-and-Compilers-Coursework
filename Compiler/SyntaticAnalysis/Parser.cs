@@ -443,20 +443,6 @@ namespace Compiler.SyntacticAnalysis
             return new IdExpressionNode(identifier);
         }
 
-        ///// <summary>
-        ///// TODO: add desc for ParseCallExpression
-        ///// </summary>
-        ///// <returns>add return desc for ParseCallExpression</returns>
-        //private IExpressionNode ParseCallExpression()
-        //{
-        //    Debugger.Write("Parsing Call Expression");
-        //    IdentifierNode identifier = ParseIdentifier();
-        //    Accept(LeftBracket);
-        //    IParameterNode parameter = ParseParameter();
-        //    Accept(RightBracket);
-        //    return new CallExpressionNode(identifier, parameter);
-        //}
-
         /// <summary>
         /// Parses a unary expresion
         /// </summary>
@@ -481,8 +467,6 @@ namespace Compiler.SyntacticAnalysis
             Accept(RightBracket);
             return expression;
         }
-
-
 
         /// <summary>
         /// Parses a parameter
@@ -531,8 +515,6 @@ namespace Compiler.SyntacticAnalysis
             IdentifierNode identifier = ParseIdentifier();
             return new VarParameterNode(identifier, startPosition);
         }
-
-
 
         /// <summary>
         /// Parses an integer literal
