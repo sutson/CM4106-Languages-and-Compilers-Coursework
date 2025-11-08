@@ -123,6 +123,7 @@ namespace Compiler.SyntacticAnalysis
             switch (CurrentToken.Type)
             {
                 case Identifier:
+                case Var:
                     return ParseAssignmentOrCallCommand();
                 case Begin:
                     return ParseBeginCommand();
@@ -158,13 +159,6 @@ namespace Compiler.SyntacticAnalysis
                 IParameterNode parameter = ParseParameter();
                 Accept(RightBracket);
                 return new CallCommandNode(identifier, parameter);
-            }
-            else if (CurrentToken.Type == Identifier)
-            {
-                Debugger.Write("Parsing something");
-                Accept(Is);
-                IExpressionNode expression = ParseExpression();
-                return new AssignCommandNode(identifier, expression);
             }
             else if (CurrentToken.Type == Is)
             {
@@ -310,60 +304,50 @@ namespace Compiler.SyntacticAnalysis
         private IDeclarationNode ParseSingleDeclaration()
         {
             Debugger.Write("Parsing Single Declaration");
+            Position StartPosition = CurrentToken.Position;
             TypeDenoterNode typeDenoter = ParseTypeDenoter();
-            Console.WriteLine("hi");
-            Console.WriteLine(CurrentToken.Type);
+            IdentifierNode identifier = ParseIdentifier();
             if (CurrentToken.Type == Is)
             {
+                // TODO: explain why this works
                 Accept(Is);
-                return ParseConstDeclaration();
+                IExpressionNode expression = ParseExpression();
+                return new ConstDeclarationNode(identifier, expression, StartPosition);
             }
             else
-            { 
-                return ParseVarDeclaration();
+            {
+                // TODO: explain why this works
+                return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
             }
-            // TODO: error for invalid type denoter? maybe this is handled in TypeChecker.cs
-            
-            //switch (typeDenoter.Identifier.IdentifierToken.Type) // TODO: check this works
-            //    {
-            //        case Const:
-            //            return ParseConstDeclaration();
-            //        case Var:
-            //            return ParseVarDeclaration();
-            //        default:
-            //            return new ErrorNode(CurrentToken.Position);
-            //    }
-            // TODO: distinguish between const and var (const has == but otherwise the same)
         }
 
         /// <summary>
         /// Parses a constant declaration
         /// </summary>
         /// <returns>An abstract syntax tree representing the constant declaration</returns>
-        private IDeclarationNode ParseConstDeclaration()
-        {
-            Debugger.Write("Parsing Constant Declaration");
-            Position StartPosition = CurrentToken.Position;
-            TypeDenoterNode typeDenoter = ParseTypeDenoter();
-            IdentifierNode identifier = ParseIdentifier();
-            Accept(Is);
-            IExpressionNode expression = ParseExpression();
-            return new ConstDeclarationNode(identifier, expression, StartPosition);
-        }
+        //private IDeclarationNode ParseConstDeclaration()
+        //{
+        //    Debugger.Write("Parsing Constant Declaration");
+        //    Position StartPosition = CurrentToken.Position;
+        //    TypeDenoterNode typeDenoter = ParseTypeDenoter();
+        //    IdentifierNode identifier = ParseIdentifier();
+        //    Accept(Is);
+        //    IExpressionNode expression = ParseExpression();
+        //    return new ConstDeclarationNode(identifier, expression, StartPosition);
+        //}
 
-        /// <summary>
-        /// Parses a variable declaration
-        /// </summary>
-        /// <returns>An abstract syntax tree representing the variable declaration</returns>
-        private IDeclarationNode ParseVarDeclaration()
-        {
-            Debugger.Write("Parsing Variable Declaration");
-            Position StartPosition = CurrentToken.Position;
-            Accept(Var);
-            TypeDenoterNode typeDenoter = ParseTypeDenoter();
-            IdentifierNode identifier = ParseIdentifier();
-            return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
-        }
+        ///// <summary>
+        ///// Parses a variable declaration
+        ///// </summary>
+        ///// <returns>An abstract syntax tree representing the variable declaration</returns>
+        //private IDeclarationNode ParseVarDeclaration()
+        //{
+        //    Debugger.Write("Parsing Variable Declaration");
+        //    Position StartPosition = CurrentToken.Position;
+        //    TypeDenoterNode typeDenoter = ParseTypeDenoter();
+        //    IdentifierNode identifier = ParseIdentifier();
+        //    return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
+        //}
 
         /// <summary>
         /// Parses a type denoter

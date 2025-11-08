@@ -105,10 +105,11 @@ namespace Compiler.Tokenization
         {
             TokenSpelling.Clear();
             // TODO: update identifier to recognise _ and - as valid
+            // TODO: update to return error when identifier has digit
             if (IsValidIdentifierChar(Reader.Current))
             {
                 TakeIt();
-                while (IsValidIdentifierChar(Reader.Current, true))
+                while (IsValidIdentifierChar(Reader.Current))
                 {
                     TakeIt();
                     while (IsDashOrUnderscore(Reader.Current))
@@ -176,43 +177,17 @@ namespace Compiler.Tokenization
             }
 
             // TODO: tokenise "{" and "}"
-            //else if (Reader.Current == '{')
-            //{
-            //    //// Read a '
-            //    //TakeIt();
-            //    //// Take whatever the character is
-            //    //TakeIt();
-            //    //// Try getting the closing '
-            //    //if (Reader.Current == '\"')
-            //    //{
-            //    //    TakeIt();
-            //    //    return TokenType.CharLiteral;
-            //    //}
-            //    //else
-            //    //{
-            //    //    // Could do some better error handling here but we weren't asked to
-            //    //    return TokenType.Error;
-            //    //}
-            //}
+            else if (Reader.Current == '{')
+            {
+                TakeIt();
+                return TokenType.Begin;
+            }
 
-            //else if (Reader.Current == '}')
-            //{
-            //    //// Read a '
-            //    //TakeIt();
-            //    //// Take whatever the character is
-            //    //TakeIt();
-            //    //// Try getting the closing '
-            //    //if (Reader.Current == '\"')
-            //    //{
-            //    //    TakeIt();
-            //    //    return TokenType.CharLiteral;
-            //    //}
-            //    //else
-            //    //{
-            //    //    // Could do some better error handling here but we weren't asked to
-            //    //    return TokenType.Error;
-            //    //}
-            //}
+            else if (Reader.Current == '}')
+            {
+                TakeIt();
+                return TokenType.End;
+            }
 
 
             else if (Reader.Current == default(char))
@@ -249,9 +224,9 @@ namespace Compiler.Tokenization
         }
 
         //TODO: add desc
-        private static bool IsValidIdentifierChar(char c, bool checkDigit = false)
+        private static bool IsValidIdentifierChar(char c)
         {
-            return (checkDigit ? char.IsLetterOrDigit(c) : char.IsLetter(c)) || c == '_';
+            return char.IsLetter(c) || c == '_';
         }
 
         //TODO: add desc

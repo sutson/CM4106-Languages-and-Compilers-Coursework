@@ -350,6 +350,7 @@ namespace Compiler.SemanticAnalysis
         /// <param name="integerExpression">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIntegerExpression(IntegerExpressionNode integerExpression)
         {
+            Console.WriteLine(integerExpression.Type);
             PerformTypeChecking(integerExpression.IntLit);
             integerExpression.Type = StandardEnvironment.IntegerType;
         }
