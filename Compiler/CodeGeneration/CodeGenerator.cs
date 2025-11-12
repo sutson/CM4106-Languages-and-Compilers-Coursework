@@ -190,7 +190,7 @@ namespace Compiler.CodeGeneration
         }
 
         /// <summary>
-        /// Generates code for a repeat command node
+        /// Generates code for a repeat command node TODO: update
         /// </summary>
         /// <param name="repeatCommand">The node to generate code for</param>
         private void GenerateCodeForRepeatCommand(RepeatCommandNode repeatCommand)
@@ -199,22 +199,24 @@ namespace Compiler.CodeGeneration
             Address loopAddress = code.NextAddress;
             GenerateCodeFor(repeatCommand.Command);
             GenerateCodeFor(repeatCommand.Expression);
-            code.AddInstruction(OpCode.JUMPIF, Register.CB, TrueValue, loopAddress);
+            code.AddInstruction(OpCode.JUMPIF, Register.CB, FalseValue, loopAddress);
             return;
         }
 
         /// <summary>
-        /// Generates code for a unless command node
+        /// Generates code for a unless command node TODO: update
         /// </summary>
-        /// <param name="repeatCommand">The node to generate code for</param>
+        /// <param name="unlessCommand">The node to generate code for</param>
         private void GenerateCodeForUnlessCommand(UnlessCommandNode unlessCommand)
         {
             Debugger.Write("Generating code for Unless Command");
-            GenerateCodeFor(unlessCommand.Expression);
-            Address skipAddress = code.NextAddress;
-            code.AddInstruction(OpCode.JUMPIF, Register.CB, TrueValue, 0);
+            Address jumpAddress = code.NextAddress;
+            code.AddInstruction(OpCode.JUMP, Register.CB, 0, 0);
+            Address loopAddress = code.NextAddress;
             GenerateCodeFor(unlessCommand.Command);
-            code.PatchInstructionToJumpHere(skipAddress);
+            code.PatchInstructionToJumpHere(jumpAddress);
+            GenerateCodeFor(unlessCommand.Expression);
+            code.AddInstruction(OpCode.JUMPIF, Register.CB, FalseValue, loopAddress);
             return;
         }
 

@@ -252,7 +252,7 @@ namespace Compiler.SyntacticAnalysis
             Debugger.Write("Parsing Let Command");
             Position startPosition = CurrentToken.Position;
             Accept(Let);
-            Accept(Local);
+            Accept(Local); // TODO: does this need to be explicity "let local"?
             IDeclarationNode declaration = ParseDeclaration();
             Accept(In);
             ICommandNode command = ParseSingleCommand();
