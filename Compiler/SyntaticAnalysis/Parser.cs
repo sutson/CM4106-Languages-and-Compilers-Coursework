@@ -124,7 +124,7 @@ namespace Compiler.SyntacticAnalysis
                     return ParseAssignmentOrCallCommand();
                 case Begin:
                     return ParseBeginCommand();
-                case Let:
+                case LetLocal:
                     return ParseLetCommand();
                 case If:
                     return ParseIfCommand();
@@ -251,8 +251,7 @@ namespace Compiler.SyntacticAnalysis
         {
             Debugger.Write("Parsing Let Command");
             Position startPosition = CurrentToken.Position;
-            Accept(Let);
-            Accept(Local); // TODO: does this need to be explicity "let local"?
+            Accept(LetLocal); // TODO: does this need to be explicity "let local"?
             IDeclarationNode declaration = ParseDeclaration();
             Accept(In);
             ICommandNode command = ParseSingleCommand();

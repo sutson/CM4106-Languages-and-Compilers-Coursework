@@ -80,37 +80,37 @@ namespace Compiler
         public void Compile()
         {
             // Tokenize
-            Write("Tokenising...");
+            Write("Tokenising...\n");
             List<Token> tokens = Tokenizer.GetAllTokens();
             if (Reporter.HasErrors) return;
             WriteLine("Done");
 
             // Parse
-            Write("Parsing...");
+            Write("Parsing...\n");
             ProgramNode tree = Parser.Parse(tokens);
             if (Reporter.HasErrors) return;
             WriteLine("Done");
 
             // Identify
-            Write("Identifying...");
+            Write("Identifying...\n");
             Identifier.PerformIdentification(tree);
             if (Reporter.HasErrors) return;
             WriteLine("Done");
 
             // Type check
-            Write("Type Checking...");
+            Write("Type Checking...\n");
             Checker.PerformTypeChecking(tree);
             if (Reporter.HasErrors) return;
             WriteLine("Done");
 
             // Code generation
-            Write("Generating code...");
+            Write("Generating code...\n");
             TargetCode targetCode = Generator.GenerateCodeFor(tree);
             if (Reporter.HasErrors) return;
             WriteLine("Done");
 
             // Output
-            Write("Writing to file...");
+            Write("Writing to file...\n");
             Writer.WriteToFiles(targetCode);
             if (Reporter.HasErrors) return;
             WriteLine("Done");

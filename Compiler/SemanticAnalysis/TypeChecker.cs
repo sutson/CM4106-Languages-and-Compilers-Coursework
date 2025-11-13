@@ -454,6 +454,12 @@ namespace Compiler.SemanticAnalysis
         /// <param name="identifier">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIdentifier(IdentifierNode identifier)
         {
+            // TODO: comment about this
+            if (identifier.IdentifierToken.Spelling.Any(char.IsDigit))
+            {
+                Reporter.ReportError($"Invalid identifier {identifier.IdentifierToken.Spelling} " +
+                    $"at line {identifier.Position.LineNumber}, column {identifier.Position.PositionInLine}");
+            }
         }
 
         /// <summary>

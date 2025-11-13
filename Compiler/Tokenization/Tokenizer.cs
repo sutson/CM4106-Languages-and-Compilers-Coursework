@@ -109,16 +109,29 @@ namespace Compiler.Tokenization
             if (IsValidIdentifierChar(Reader.Current))
             {
                 TakeIt();
+                bool invalidChar = false;
                 while (IsValidIdentifierChar(Reader.Current))
                 {
                     TakeIt();
-                    while (IsDashOrUnderscore(Reader.Current))
+                    while (IsDashOrUnderscore(Reader.Current) || char.IsDigit(Reader.Current))
+                    {
+                        if (char.IsDigit(Reader.Current))
+                        {
+                            invalidChar = true; TakeIt();
+                        }
+                        else
+                        {
+                            TakeIt();
+                        }
+                    }
+                    if (TokenSpelling.ToString() == "let" && IsWhiteSpace(Reader.Current))
                         TakeIt();
                 }
+
                 if (TokenTypes.IsKeyword(TokenSpelling))
                     return TokenTypes.GetTokenForKeyword(TokenSpelling);
                 
-                return TokenType.Identifier;
+                return invalidChar ? TokenType.Error : TokenType.Identifier;
             }
             else if (char.IsDigit(Reader.Current))
             {

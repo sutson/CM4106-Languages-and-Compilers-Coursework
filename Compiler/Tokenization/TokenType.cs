@@ -15,7 +15,7 @@ namespace Compiler.Tokenization
         IntLiteral, Identifier, Operator, CharLiteral, 
 
         // reserved words - terminals
-        Begin, Const, Do, Else, End, If, In, Let, Local, Then, Var, While, Repeat, Until, Unless,
+        Begin, Const, Do, Else, End, If, In, LetLocal, Then, Var, While, Repeat, Until, Unless,
 
         // punctuation - terminals (Is is for assignment and constants)
         Semicolon, Is, LeftBracket, RightBracket,
@@ -41,8 +41,7 @@ namespace Compiler.Tokenization
             { "}", End },
             { "if", If },
             { "in", In },
-            { "let", Let },
-            { "local", Local },
+            { "let local", LetLocal },
             { "then", Then },
             { "var", Var },
             { "while", While },
