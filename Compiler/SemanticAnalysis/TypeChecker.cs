@@ -211,9 +211,9 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
-        /// Carries out type checking on a while command node TODO: change
+        /// Carries out type checking on a repeat command node
         /// </summary>
-        /// <param name="repeatCommand">The node to perform type checking on TODO: change</param>
+        /// <param name="repeatCommand">The node to perform type checking on</param>
         private void PerformTypeCheckingOnRepeatCommand(RepeatCommandNode repeatCommand)
         {
             PerformTypeChecking(repeatCommand.Command);
@@ -226,9 +226,9 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
-        /// Carries out type checking on a while command node TODO: change
+        /// Carries out type checking on an unless command node
         /// </summary>
-        /// <param name="unlessCommand">The node to perform type checking on TODO: change</param>
+        /// <param name="unlessCommand">The node to perform type checking on</param>
         private void PerformTypeCheckingOnUnlessCommand(UnlessCommandNode unlessCommand)
         {
             PerformTypeChecking(unlessCommand.Expression);
@@ -454,12 +454,12 @@ namespace Compiler.SemanticAnalysis
         /// <param name="identifier">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIdentifier(IdentifierNode identifier)
         {
-            // TODO: comment about this
-            if (identifier.IdentifierToken.Spelling.Any(char.IsDigit))
-            {
-                Reporter.ReportError($"Invalid identifier {identifier.IdentifierToken.Spelling} " +
-                    $"at line {identifier.Position.LineNumber}, column {identifier.Position.PositionInLine}");
-            }
+            //// TODO: check
+            //if (identifier.IdentifierToken.Spelling.Any(char.IsDigit))
+            //{
+            //    Reporter.ReportError($"Invalid identifier {identifier.IdentifierToken.Spelling} " +
+            //        $"at line {identifier.Position.LineNumber}, column {identifier.Position.PositionInLine}");
+            //}
         }
 
         /// <summary>

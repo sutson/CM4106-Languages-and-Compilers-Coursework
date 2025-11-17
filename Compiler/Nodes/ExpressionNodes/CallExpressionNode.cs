@@ -1,8 +1,7 @@
 ﻿namespace Compiler.Nodes
 {
     /// <summary>
-    /// TODO: update
-    /// A node corresponding to an ID expression
+    /// A node corresponding to a call expression
     /// </summary>
     public class CallExpressionNode : IExpressionNode
     {
@@ -27,6 +26,7 @@
         /// Creates a new ID expression node
         /// </summary>
         /// <param name="identifier">The identifier</param>
+        /// <param name="parameter">The parameter passed to the expression TODO: check</param>
         public CallExpressionNode(IdentifierNode identifier, IParameterNode parameter)
         {
             Identifier = identifier;

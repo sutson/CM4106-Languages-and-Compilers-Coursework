@@ -190,11 +190,12 @@ namespace Compiler.CodeGeneration
         }
 
         /// <summary>
-        /// Generates code for a repeat command node TODO: update
+        /// Generates code for a repeat command node
         /// </summary>
         /// <param name="repeatCommand">The node to generate code for</param>
         private void GenerateCodeForRepeatCommand(RepeatCommandNode repeatCommand)
         {
+            // TODO: comments?
             Debugger.Write("Generating code for Repeat Command");
             Address loopAddress = code.NextAddress;
             GenerateCodeFor(repeatCommand.Command);
@@ -204,11 +205,12 @@ namespace Compiler.CodeGeneration
         }
 
         /// <summary>
-        /// Generates code for a unless command node TODO: update
+        /// Generates code for an unless command node
         /// </summary>
         /// <param name="unlessCommand">The node to generate code for</param>
         private void GenerateCodeForUnlessCommand(UnlessCommandNode unlessCommand)
         {
+            // TODO: comments?
             Debugger.Write("Generating code for Unless Command");
             Address jumpAddress = code.NextAddress;
             code.AddInstruction(OpCode.JUMP, Register.CB, 0, 0);

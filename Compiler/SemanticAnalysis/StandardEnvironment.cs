@@ -67,8 +67,6 @@ namespace Compiler.SemanticAnalysis
         public static BinaryOperationDeclarationNode Minus { get; } = new BinaryOperationDeclarationNode("-", SUB, IntegerType, IntegerType, IntegerType);
         public static BinaryOperationDeclarationNode Multiply { get; } = new BinaryOperationDeclarationNode("*", MULT, IntegerType, IntegerType, IntegerType);
         public static BinaryOperationDeclarationNode Divide { get; } = new BinaryOperationDeclarationNode("/", DIV, IntegerType, IntegerType, IntegerType);
-        
-        // TODO: add nodes for & and |
         public static BinaryOperationDeclarationNode And { get; } = new BinaryOperationDeclarationNode("&", AND, BooleanType, BooleanType, BooleanType);
         public static BinaryOperationDeclarationNode Or { get; } = new BinaryOperationDeclarationNode("|", OR, BooleanType, BooleanType, BooleanType);
         

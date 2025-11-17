@@ -77,6 +77,8 @@ namespace Compiler.Tokenization
             if (tokenType == TokenType.Error)
             {
                 // Report the error here
+                Reporter.ReportError($"Invalid token {token.Spelling} " +
+                    $"at line {tokenStartPosition.LineNumber}, column {tokenStartPosition.PositionInLine}");
             }
 
             return token;
@@ -104,34 +106,26 @@ namespace Compiler.Tokenization
         private TokenType ScanToken()
         {
             TokenSpelling.Clear();
-            // TODO: update identifier to recognise _ and - as valid
-            // TODO: update to return error when identifier has digit
-            if (IsValidIdentifierChar(Reader.Current))
+            if (IsValidStartingIdentifierChar(Reader.Current))
             {
+                // Take valid starting character for an identifier (letter or '_')
                 TakeIt();
-                bool invalidChar = false;
                 while (IsValidIdentifierChar(Reader.Current))
                 {
+                    // Take valid character for rest of identifier (letter, '-' or '_')
                     TakeIt();
-                    while (IsDashOrUnderscore(Reader.Current) || char.IsDigit(Reader.Current))
-                    {
-                        if (char.IsDigit(Reader.Current))
-                        {
-                            invalidChar = true; TakeIt();
-                        }
-                        else
-                        {
-                            TakeIt();
-                        }
-                    }
+
+                    // Special case for "let local" identifier
                     if (TokenSpelling.ToString() == "let" && IsWhiteSpace(Reader.Current))
+                        // Take whitespace character if current token is "let"
+                        // This lets "let local" be identified as a single token
                         TakeIt();
                 }
 
                 if (TokenTypes.IsKeyword(TokenSpelling))
                     return TokenTypes.GetTokenForKeyword(TokenSpelling);
                 
-                return invalidChar ? TokenType.Error : TokenType.Identifier;
+                return TokenType.Identifier;
             }
             else if (char.IsDigit(Reader.Current))
             {
@@ -189,15 +183,16 @@ namespace Compiler.Tokenization
                 }
             }
 
-            // TODO: tokenise "{" and "}"
             else if (Reader.Current == '{')
             {
+                // Read a {
                 TakeIt();
                 return TokenType.Begin;
             }
 
             else if (Reader.Current == '}')
             {
+                // Read a }
                 TakeIt();
                 return TokenType.End;
             }
@@ -236,16 +231,24 @@ namespace Compiler.Tokenization
             return c == ' ' || c == '\t' || c == '\n';
         }
 
-        //TODO: add desc
-        private static bool IsValidIdentifierChar(char c)
+        /// <summary>
+        /// Checks whether a character is a valid starting character of an identifier
+        /// </summary>
+        /// <param name="c">The character to check</param>
+        /// <returns>True if c is either a char or '_'</returns>
+        private static bool IsValidStartingIdentifierChar(char c)
         {
             return char.IsLetter(c) || c == '_';
         }
 
-        //TODO: add desc
-        private static bool IsDashOrUnderscore(char c)
+        /// <summary>
+        /// Checks whether a character is valid for an identifier beyond the starting character
+        /// </summary>
+        /// <param name="c">The character to check</param>
+        /// <returns>True if c is char, '-' or '_'</returns>
+        private static bool IsValidIdentifierChar(char c)
         {
-            return c == '-' || c == '_';
+            return char.IsLetter(c) || c == '-' || c == '_';
         }
 
         /// <summary>

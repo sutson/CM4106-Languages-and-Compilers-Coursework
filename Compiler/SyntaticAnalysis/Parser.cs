@@ -130,7 +130,6 @@ namespace Compiler.SyntacticAnalysis
                     return ParseIfCommand();
                 case While:
                     return ParseWhileCommand();
-                // TODO: handle Repeat and Unless
                 case Repeat:
                     return ParseRepeatCommand();
                 case Unless:
@@ -197,9 +196,9 @@ namespace Compiler.SyntacticAnalysis
         }
 
         /// <summary>
-        /// TODO: add desc for ParseRepeatCommand
+        /// Parses a repeat command
         /// </summary>
-        /// <returns>TODO: add return desc for ParseRepeatCommand</returns>
+        /// <returns>An abstract syntax tree representing the repeat command</returns>
         private ICommandNode ParseRepeatCommand()
         {
             Debugger.Write("Parsing Repeat Command");
@@ -212,9 +211,9 @@ namespace Compiler.SyntacticAnalysis
         }
 
         /// <summary>
-        /// TODO: add desc for ParseUnlessCommand
+        /// Parses an unless command
         /// </summary>
-        /// <returns>TODO: add return desc for ParseUnlessCommand</returns>
+        /// <returns>An abstract syntax tree representing the unless command</returns>
         private ICommandNode ParseUnlessCommand()
         {
             Debugger.Write("Parsing Unless Command");
@@ -251,7 +250,7 @@ namespace Compiler.SyntacticAnalysis
         {
             Debugger.Write("Parsing Let Command");
             Position startPosition = CurrentToken.Position;
-            Accept(LetLocal); // TODO: does this need to be explicity "let local"?
+            Accept(LetLocal);
             IDeclarationNode declaration = ParseDeclaration();
             Accept(In);
             ICommandNode command = ParseSingleCommand();
@@ -264,7 +263,8 @@ namespace Compiler.SyntacticAnalysis
         /// <returns>An abstract syntax tree representing the begin command</returns>
         private ICommandNode ParseBeginCommand()
         {
-            Debugger.Write("Parsing Begin (\"{\") Command"); // TODO: add comments for changes?
+            // TODO: check this
+            Debugger.Write("Parsing Begin (\"{\") Command"); // Begin command is given { in MiniSquare
             Accept(Begin);
             ICommandNode command = ParseCommand();
             Accept(End);
@@ -303,16 +303,18 @@ namespace Compiler.SyntacticAnalysis
             Position StartPosition = CurrentToken.Position;
             TypeDenoterNode typeDenoter = ParseTypeDenoter();
             IdentifierNode identifier = ParseIdentifier();
+
+            // TODO: check this
+            // const declarations require the Is token (==) for assigning a value to the identifier.
+            // Therefore, we need to check this token is present so we know that we're declaring a const rather than a var
             if (CurrentToken.Type == Is)
             {
-                // TODO: explain why this works
                 Accept(Is);
                 IExpressionNode expression = ParseExpression();
                 return new ConstDeclarationNode(identifier, expression, StartPosition);
             }
             else
             {
-                // TODO: explain why this works
                 return new VarDeclarationNode(identifier, typeDenoter, StartPosition);
             }
         }

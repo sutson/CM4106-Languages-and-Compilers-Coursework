@@ -150,9 +150,9 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
-        /// Carries out identification on a while command node TODO: change
+        /// Carries out identification on a repeat command node
         /// </summary>
-        /// <param name="repeatCommand">The node to perform identification on TODO: change</param>
+        /// <param name="repeatCommand">The node to perform identification on</param>
         private void PerformIdentificationOnRepeatCommand(RepeatCommandNode repeatCommand)
         {
             PerformIdentification(repeatCommand.Command);
@@ -160,9 +160,9 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
-        /// Carries out identification on a while command node TODO: change
+        /// Carries out identification on an unless command node
         /// </summary>
-        /// <param name="unlessCommand">The node to perform identification on TODO: change</param>
+        /// <param name="unlessCommand">The node to perform identification on</param>
         private void PerformIdentificationOnUnlessCommand(UnlessCommandNode unlessCommand)
         {
             PerformIdentification(unlessCommand.Expression);
