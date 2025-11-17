@@ -26,7 +26,7 @@
         /// Creates a new ID expression node
         /// </summary>
         /// <param name="identifier">The identifier</param>
-        /// <param name="parameter">The parameter passed to the expression TODO: check</param>
+        /// <param name="parameter">The parameter passed to the expression</param>
         public CallExpressionNode(IdentifierNode identifier, IParameterNode parameter)
         {
             Identifier = identifier;

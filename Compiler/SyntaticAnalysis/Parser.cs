@@ -263,12 +263,12 @@ namespace Compiler.SyntacticAnalysis
         /// <returns>An abstract syntax tree representing the begin command</returns>
         private ICommandNode ParseBeginCommand()
         {
-            // TODO: check this
-            Debugger.Write("Parsing Begin (\"{\") Command"); // Begin command is given { in MiniSquare
+            Debugger.Write("Parsing Begin (\"{\") Command"); // Begin command is given by { in MiniSquare
+            Position startPosition = CurrentToken.Position;
             Accept(Begin);
             ICommandNode command = ParseCommand();
             Accept(End);
-            return command;
+            return new BeginCommandNode(command, startPosition);
         }
 
 
@@ -304,7 +304,6 @@ namespace Compiler.SyntacticAnalysis
             TypeDenoterNode typeDenoter = ParseTypeDenoter();
             IdentifierNode identifier = ParseIdentifier();
 
-            // TODO: check this
             // const declarations require the Is token (==) for assigning a value to the identifier.
             // Therefore, we need to check this token is present so we know that we're declaring a const rather than a var
             if (CurrentToken.Type == Is)
@@ -435,7 +434,7 @@ namespace Compiler.SyntacticAnalysis
             Accept(LeftBracket);
             IExpressionNode expression = ParseExpression();
             Accept(RightBracket);
-            return expression;
+            return new BracketExpressionNode(expression);
         }
 
         /// <summary>

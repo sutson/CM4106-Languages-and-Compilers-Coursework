@@ -153,12 +153,22 @@ namespace Compiler.CodeGeneration
         /// <param name="letCommand">The node to generate code for</param>
         private void GenerateCodeForLetCommand(LetCommandNode letCommand)
         {
-            Debugger.Write("Generating code for Let Command");
+            Debugger.Write("Generating code for Let Local Command");
             scopes.AddScope();
             GenerateCodeFor(letCommand.Declaration);
             GenerateCodeFor(letCommand.Command);
             code.AddInstruction(OpCode.POP, 0, 0, scopes.GetLocalScopeSize());
             scopes.RemoveScope();
+        }
+
+        /// <summary>
+        /// Generates code for a begin command node
+        /// </summary>
+        /// <param name="beginCommand">The node to generate code for</param>
+        private void GenerateCodeForBeginCommand(BeginCommandNode beginCommand)
+        {
+            Debugger.Write("Generating code for Begin Command");
+            GenerateCodeFor(beginCommand.Command);
         }
 
         /// <summary>
@@ -326,7 +336,15 @@ namespace Compiler.CodeGeneration
             GenerateCodeFor(unaryExpression.Op);
         }
 
-
+        /// <summary>
+        /// Generates code for a bracket expression node
+        /// </summary>
+        /// <param name="bracketExpression">The node to generate code for</param>
+        private void GenerateCodeForBracketExpression(BracketExpressionNode bracketExpression)
+        {
+            Debugger.Write("Generating code for Bracket Expression");
+            GenerateCodeFor(bracketExpression.Expression);
+        }
 
         /// <summary>
         /// Generates code for a blank parameter node

@@ -186,6 +186,15 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
+        /// Carries out type checking on a begin command node
+        /// </summary>
+        /// <param name="beginCommand">The node to perform type checking on</param>
+        private void PerformTypeCheckingOnBeginCommand(BeginCommandNode beginCommand)
+        {
+            PerformTypeChecking(beginCommand.Command);
+        }
+
+        /// <summary>
         /// Carries out type checking on a sequential command node
         /// </summary>
         /// <param name="sequentialCommand">The node to perform type checking on</param>
@@ -343,7 +352,7 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
-        /// Carries out type checking on a  node
+        /// Carries out type checking on an integer expression node
         /// </summary>
         /// <param name="integerExpression">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIntegerExpression(IntegerExpressionNode integerExpression)
@@ -377,7 +386,15 @@ namespace Compiler.SemanticAnalysis
             }
         }
 
-
+        /// <summary>
+        /// Carries out type checking on a bracket expression node
+        /// </summary>
+        /// <param name="bracketExpression">The node to perform type checking on</param>
+        private void PerformTypeCheckingOnBracketExpression(BracketExpressionNode bracketExpression)
+        {
+            PerformTypeChecking(bracketExpression.Expression);
+            bracketExpression.Type = bracketExpression.Expression.Type;
+        }
 
         /// <summary>
         /// Carries out type checking on a blank parameter

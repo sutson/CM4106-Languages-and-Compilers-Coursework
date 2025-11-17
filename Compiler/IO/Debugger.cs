@@ -8,7 +8,7 @@
         /// <summary>
         /// Whether to write debugging logs
         /// </summary>
-        private const bool DEBUG = true;
+        private const bool DEBUG = false;
 
         /// <summary>
         /// Write a debugging message if the logging is turned on

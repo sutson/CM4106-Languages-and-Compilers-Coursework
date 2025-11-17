@@ -130,6 +130,15 @@ namespace Compiler.SemanticAnalysis
         }
 
         /// <summary>
+        /// Carries out identification on a begin command node
+        /// </summary>
+        /// <param name="beginCommand">The node to perform identification on</param>
+        private void PerformIdentificationOnBeginCommand(BeginCommandNode beginCommand)
+        {
+            PerformIdentification(beginCommand.Command);
+        }
+
+        /// <summary>
         /// Carries out identification on a sequential command node
         /// </summary>
         /// <param name="sequentialCommand">The node to perform identification on</param>
@@ -177,6 +186,11 @@ namespace Compiler.SemanticAnalysis
         {
             Token token = constDeclaration.Identifier.IdentifierToken;
             bool success = SymbolTable.Enter(token.Spelling, constDeclaration);
+            if (!success)
+            {
+                Reporter.ReportError($"{token.Spelling} declared twice in the same scope " +
+                    $"at line {token.Position.LineNumber}, column {token.Position.PositionInLine}");
+            }
             PerformIdentification(constDeclaration.Expression);
         }
 
@@ -199,6 +213,11 @@ namespace Compiler.SemanticAnalysis
             PerformIdentification(varDeclaration.TypeDenoter);
             Token token = varDeclaration.Identifier.IdentifierToken;
             bool success = SymbolTable.Enter(token.Spelling, varDeclaration);
+            if (!success)
+            {
+                Reporter.ReportError($"{token.Spelling} declared twice in the same scope " +
+                    $"at line {token.Position.LineNumber}, column {token.Position.PositionInLine}");
+            }
         }
 
         /// <summary>
@@ -249,7 +268,14 @@ namespace Compiler.SemanticAnalysis
             PerformIdentification(unaryExpression.Expression);
         }
 
-
+        /// <summary>
+        /// Carries out identification on a bracket expression node
+        /// </summary>
+        /// <param name="bracketExpression">The node to perform identification on</param>
+        private void PerformIdentificationOnBracketExpression(BracketExpressionNode bracketExpression)
+        {
+            PerformIdentification(bracketExpression.Expression);
+        }
 
         /// <summary>
         /// Carries out identification on a blank parameter node
