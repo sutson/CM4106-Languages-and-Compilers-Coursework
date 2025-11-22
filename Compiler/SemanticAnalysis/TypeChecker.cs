@@ -344,7 +344,7 @@ namespace Compiler.SemanticAnalysis
             PerformTypeChecking(idExpression.Identifier);
             if (!(idExpression.Identifier.Declaration is IEntityDeclarationNode declaration))
             {
-                Reporter.ReportError($"{idExpression.Identifier.IdentifierToken.Spelling} is not a variable or constant" +
+                Reporter.ReportError($"{idExpression.Identifier.IdentifierToken.Spelling} is not a variable or constant " +
                     $"at line {idExpression.Position.LineNumber}, column {idExpression.Position.PositionInLine}");
             }
             else
@@ -471,12 +471,6 @@ namespace Compiler.SemanticAnalysis
         /// <param name="identifier">The node to perform type checking on</param>
         private void PerformTypeCheckingOnIdentifier(IdentifierNode identifier)
         {
-            //// TODO: check
-            //if (identifier.IdentifierToken.Spelling.Any(char.IsDigit))
-            //{
-            //    Reporter.ReportError($"Invalid identifier {identifier.IdentifierToken.Spelling} " +
-            //        $"at line {identifier.Position.LineNumber}, column {identifier.Position.PositionInLine}");
-            //}
         }
 
         /// <summary>

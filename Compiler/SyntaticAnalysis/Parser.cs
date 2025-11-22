@@ -86,7 +86,7 @@ namespace Compiler.SyntacticAnalysis
             ICommandNode command = ParseCommand();
             ProgramNode program = new ProgramNode(command);
             if (CurrentToken.Type != EndOfText)
-                Reporter.ReportError($"End of file not reached." +
+                Reporter.ReportError($"End of file not reached. " +
                     $"Stopped at line {CurrentToken.Position.LineNumber}, column {CurrentToken.Position.PositionInLine}");
             return program;
         }
