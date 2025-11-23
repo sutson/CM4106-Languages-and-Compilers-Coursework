@@ -24,7 +24,7 @@ namespace Compiler.IO
         public void ReportError(string message)
         {
             ErrorCount += 1;
-            WriteLine($"\nERROR: {message}\n");
+            WriteLine($"ERROR: {message}");
         }
     }
 }
