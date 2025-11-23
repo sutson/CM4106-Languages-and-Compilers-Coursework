@@ -110,9 +110,13 @@ namespace Compiler.Tokenization
             {
                 // Take valid starting character for an identifier (letter or '_')
                 TakeIt();
-                while (IsValidIdentifierChar(Reader.Current))
+
+                // Maximal Munch - take any character which isn't white space or reserved.
+                // "Reserved" means any chars which have specific non-operational purposes
+                // and must never appear in identifiers, eg. '{' or ';'
+                while (!(char.IsWhiteSpace(Reader.Current) || IsReservedChar(Reader.Current)))
                 {
-                    // Take valid character for rest of identifier (letter, '-' or '_')
+                    // Take character
                     TakeIt();
 
                     // Special case for "let local" identifier
@@ -124,6 +128,10 @@ namespace Compiler.Tokenization
 
                 if (TokenTypes.IsKeyword(TokenSpelling))
                     return TokenTypes.GetTokenForKeyword(TokenSpelling);
+
+                // If identifier token isn't of the form ( letter | _ ) ( letter | _ | - )*, return Error token
+                if (!IsValidIdentifierToken(TokenSpelling.ToString()))
+                    return TokenType.Error;
                 
                 return TokenType.Identifier;
             }
@@ -252,6 +260,19 @@ namespace Compiler.Tokenization
         }
 
         /// <summary>
+        /// Checks whether a token string is a valid identifier, i.e. ( letter | _ )( letter | _ | - )*
+        /// </summary>
+        /// <param name="tokenString">The token string to check</param>
+        /// <returns>True if token string is valid</returns>
+        private static bool IsValidIdentifierToken(string tokenString)
+        {
+            foreach (char character in tokenString.ToCharArray())
+                if (!IsValidIdentifierChar(character))
+                    return false;
+            return true;
+        }
+
+        /// <summary>
         /// Checks whether a character is an operator
         /// </summary>
         /// <param name="c">The character to check</param>
@@ -270,6 +291,28 @@ namespace Compiler.Tokenization
                 case '\\':
                 case '&':
                 case '|':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a character is reserved for a specific non-operational purpose
+        /// </summary>
+        /// <param name="c">The character to check</param>
+        /// <returns>True if the character has a reserved purpose, eg. '"' encloses char literals</returns>
+        private static bool IsReservedChar(char c)
+        {
+            switch (c)
+            {
+                case ';':
+                case '(':
+                case ')':
+                case '\"':
+                case '{':
+                case '}':
+                case default(char):
                     return true;
                 default:
                     return false;
